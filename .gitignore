@@ -23,3 +23,6 @@ __pycache__/
 
 # Duplicate skill copy made by the skills installer
 agent/
+
+# CLAD scene snapshots
+.virtual-scene*.json

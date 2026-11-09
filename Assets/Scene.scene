@@ -4,6 +4,7 @@
     - !<own> 00000000-0000-0065-0000-000000000064
     - !<own> 0005641c-028d-459a-0000-000000014b4d
     - !<own> f5d74682-203a-4970-81ea-9fa7b88c96bb
+    - !<own> e334b800-1620-495a-84ec-5104fac3468f
   layers: !<Layers/267ee9a7-aff2-4f9d-9a49-f71214747d03>
     userLayers:
       - id: 1
@@ -1957,6 +1958,22 @@
     []
   Components:
     []
+- !<ScriptComponent/c70ed3cc-7883-4344-8c7c-60928eee81d8>
+  PrefabRemaps:
+    []
+  Name: HonestLabelController
+  Enabled: true
+  ScriptAsset: !<reference> dcfb58cd-a1bd-499b-ba1c-59fbc388c424
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      {}
+  ScriptTypes:
+    "":
+      {}
 - !<ScriptComponent/c8e031d3-a8a1-468a-a419-427f8556de4c>
   PrefabRemaps:
     []
@@ -2275,6 +2292,21 @@
     - !<own> 7e2075c6-0882-4275-8365-16a03da73298
   Components:
     []
+- !<SceneObject/e334b800-1620-495a-84ec-5104fac3468f>
+  PrefabRemaps:
+    []
+  Name: HonestLabel
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> c70ed3cc-7883-4344-8c7c-60928eee81d8
 - !<SceneObject/e42bbb9f-e951-4432-be2e-3cc712b1fc33>
   PrefabRemaps:
     []
