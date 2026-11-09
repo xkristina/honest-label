@@ -20,3 +20,5 @@ credentials.env
 # Python
 __pycache__/
 .venv/
+cam*.jpg
+last_scan.jpg
