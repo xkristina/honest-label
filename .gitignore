@@ -20,3 +20,6 @@ credentials.env
 # Python
 __pycache__/
 .venv/
+
+# Duplicate skill copy made by the skills installer
+agent/
