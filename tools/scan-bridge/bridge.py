@@ -44,6 +44,19 @@ clients = set()
 
 # ---------------------------------------------------------------- frames
 
+MAX_SIDE = int(os.environ.get("SCAN_MAX_SIDE", "896"))
+
+
+def shrink(cv2, img):
+    """Downscale so the longest side is MAX_SIDE px: smaller upload, faster Gemini reply."""
+    h, w = img.shape[:2]
+    m = max(h, w)
+    if m <= MAX_SIDE:
+        return img
+    k = MAX_SIDE / m
+    return cv2.resize(img, (int(w * k), int(h * k)), interpolation=cv2.INTER_AREA)
+
+
 class Grabber(threading.Thread):
     """Reads the webcam nonstop on its own thread and keeps only the newest frame."""
     def __init__(self):
@@ -75,6 +88,7 @@ class Grabber(threading.Thread):
             f = self.frame
         if f is None:
             return None
+        f = shrink(self.cv2, f)
         ok, buf = self.cv2.imencode(".jpg", f, [self.cv2.IMWRITE_JPEG_QUALITY, quality])
         return buf.tobytes() if ok else None
 
@@ -91,6 +105,7 @@ class ImageSource:
             import cv2
             img = cv2.imread(path)
             if img is not None:
+                img = shrink(cv2, img)
                 ok, buf = cv2.imencode(".jpg", img, [cv2.IMWRITE_JPEG_QUALITY, 90])
                 if ok:
                     return buf.tobytes()
