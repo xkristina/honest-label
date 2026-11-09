@@ -15,6 +15,7 @@ export const COLORS = {
   buttonHover: new vec4(0.35, 0.65, 0.85, 1),
   cube: new vec4(1, 1, 1, 1),
   good: new vec4(0.55, 1, 0.6, 1),
+  dimCube: new vec4(0.45, 0.45, 0.45, 1),
 }
 
 export class SceneKit {
@@ -73,10 +74,12 @@ export class SceneKit {
   }
 
   /** A big pinchable button: box + label + collider + SIK Interactable. Highlights on hover. */
-  button(parent: SceneObject, name: string, label: string, sizeCm: vec3, pos: vec3, onPress: () => void): SceneObject {
+  button(parent: SceneObject, name: string, label: string, sizeCm: vec3, pos: vec3, onPress: () => void,
+         onLabel?: (t: Text) => void): SceneObject {
     const root = this.group(parent, name, pos)
     const body = this.box(root, name + "_Body", sizeCm, vec3.zero(), COLORS.button)
-    this.text(root, name + "_Label", label, sizeCm.y * 0.45, new vec3(0, 0, sizeCm.z / 2 + 0.2))
+    const labelText = this.text(root, name + "_Label", label, sizeCm.y * 0.4, new vec3(0, 0, sizeCm.z / 2 + 0.2))
+    if (onLabel) onLabel(labelText)
 
     const collider = root.createComponent("Physics.ColliderComponent") as ColliderComponent
     const shape = Shape.createBoxShape()

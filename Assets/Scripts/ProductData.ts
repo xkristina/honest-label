@@ -73,6 +73,24 @@ export const CACHED_PRODUCTS: ScanResult[] = [
   },
 ]
 
+export interface CompareOutcome {
+  /** 0 = first product is the better pick, 1 = second, null = no winner. */
+  winner: 0 | 1 | null
+  message: string
+}
+
+/** Lower sugar wins. Null sugar on either side, or equal sugar, has no winner. */
+export function compareResults(a: ScanResult, b: ScanResult): CompareOutcome {
+  if (a.sugar_g === null || b.sugar_g === null) {
+    return { winner: null, message: "Can't compare: no sugar label" }
+  }
+  if (a.sugar_g === b.sugar_g) return { winner: null, message: "Same sugar" }
+  const winner: 0 | 1 = a.sugar_g < b.sugar_g ? 0 : 1
+  const diff = Math.abs(a.sugar_g - b.sugar_g)
+  const name = (winner === 0 ? a : b).name
+  return { winner, message: `${name}: ${diff} g less sugar` }
+}
+
 /** Hands out cached products in order 1 -> 2 -> 3, then repeats. */
 export class CachedScanner {
   private index = 0

@@ -28,8 +28,8 @@
   ExportUid: 00000000-0000-0000-0000-000000000000
   PackagePolicy: CanBeUnpacked
   ScriptInputsHidden:
-    autoScanCount: false
     boxMesh: false
+    devActions: false
     unlitMaterial: false
   ScriptTypesHidden:
     {}
@@ -42,11 +42,11 @@
   DefaultScriptInputs:
     - boxMesh: !<reference.RenderMesh> 00000000-0000-0000-0000-000000000000
       unlitMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
-      autoScanCount: !<float> 0.000000
+      devActions: ""
   ScriptTypes:
     -
       {}
   InputLines:
     - // @input Asset.RenderMesh boxMesh
     - // @input Asset.Material unlitMaterial
-    - // @input float autoScanCount
+    - // @input string devActions
