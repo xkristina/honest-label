@@ -15,7 +15,8 @@ metaInfo:
     []
   lensName: SpecsBaseTemplate
   lensDescriptors:
-    []
+    - AI_MUTATED
+    - EXPERIMENTAL_API
   lensApplicableContext:
     - live_camera
     - reply_camera
