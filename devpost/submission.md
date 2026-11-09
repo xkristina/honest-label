@@ -1,6 +1,6 @@
 # Devpost submission draft: Honest Label
 
-> **Before submitting:** replace the placeholder sugar values if you check them against real labels, add the YouTube link and make the repo public. If the bridge connection (Step F) gets finished, update "What's next" and the "How we built it" status line.
+> **Before submitting:** add the YouTube link and make the repo public.
 
 **Tagline:** See the sugar behind the marketing: real-size, on the table in front of you.
 
@@ -8,7 +8,7 @@
 The front of a pack is marketing: "natural flavours", "no added sugar", "made with real fruit". The truth sits in a tiny nutrition panel on the back, and almost nobody reads it in the aisle, especially with a child pulling at your sleeve. We wanted something for shoppers, parents and anyone trying to cut sugar, in Jamaica and anywhere, that turns a label into something you can *see*.
 
 ## What it does
-Hold up a packaged food or drink and pinch **Scan**. Honest Label drops the product's sugar onto the table in front of you as a real-size pile of sugar cubes (1 cube = 4 g), one cube at a time. Beside the pile is a one-line verdict, and below it two front-of-pack claims decoded in plain words: "Natural flavours" becomes "flavour made from natural sources in a lab, not fruit."
+Hold up a packaged food or drink and pinch **Scan**. Honest Label reads the label and drops the product's sugar onto the table in front of you as a real-size pile of sugar cubes (1 cube = 4 g), one cube at a time, with a picture of the product floating above it. Beside the pile is a one-line verdict, and below it two front-of-pack claims decoded in plain words: "Natural flavours" becomes "flavour made from natural sources in a lab, not fruit."
 
 Pinch **Compare** and scan a second product: both piles stand side by side, the lower-sugar one glows green and gets a **Better pick** label. If a product has no nutrition label, like a wrapped bakery coco bread, Honest Label shows "Not on label" and refuses to guess or pick a winner.
 
@@ -17,19 +17,21 @@ Your hands stay on the product and your eyes stay on the shelf. A phone can show
 
 ## How we built it
 - **Design first.** We used the `plan-lens` skill to write a one-page design brief: one spatial moment, where things live (about 1 m away, below eye level, on the table), big pinch targets, light text only for the additive display, and six done criteria.
-- **Built with Claude Code and Snap's CLAD.** We built the Lens in small steps (cached data, start card, cube pile, cards, compare and reset), and after each step compiled, checked the Lens Studio preview and committed. TypeScript with Spectacles Interaction Kit for every pinch.
+- **Built with Claude Code and Snap's CLAD.** We built the Lens in small steps (saved data, start card, cube pile, cards, compare and reset, bridge connection, pictures and polish), and after each step compiled, checked the Lens Studio preview and committed. TypeScript with Spectacles Interaction Kit for every pinch.
 - **A fixed message contract** (`scan_result` JSON) between the scanner and the Lens, so scanning and the AR view could be built in parallel.
-- **Preview stand-in.** The SPECS Camera Module returns no cameras in Lens Studio's preview, so the demo uses cached results for three products. Our scan bridge (a Python tool adapted from our earlier project GHOST) grabs a webcam frame and asks Gemini to read the label; connecting it to the Lens is in progress.
+- **Live scans in the preview.** The SPECS Camera Module returns no cameras in Lens Studio's preview, so we wrote a scan bridge: a small Python tool (adapted from our earlier project GHOST) that grabs a webcam frame, asks Gemini to read the label, and answers the Lens over a local WebSocket. Results are tagged **live**. If the bridge is off, slow (over 6 s) or errors, the Lens falls back to saved results for three generic demo products, tagged **saved**, so the demo never stalls.
 
 ## Challenges we ran into
-- **No camera in the preview.** We designed the stand-in up front instead of finding out at the end.
-- **Real size is small.** A 1.6 cm cube at 1 m is easy to miss, so instead of scaling it up we piled the cubes 3 wide in layers so it reads as "a pile of sugar" while staying true to size.
+- **No camera in the preview.** We designed the bridge-plus-fallback up front instead of finding out at the end.
+- **Plain `ws://` is locked down.** Lens Studio only opens an insecure local WebSocket with Experimental API switched on; the Lens detects the refusal and falls back to saved results instead of failing.
+- **Real size is small.** A 1.6 cm cube at 1 m is easy to miss, so instead of scaling it up we piled the cubes 3 wide in layers, gave each a soft glow, and added a product picture above the pile so it reads as "a pile of sugar next to the can" while staying true to size.
 - **Layout in a narrow view.** Our first button row hid the piles behind it; we moved the buttons to hang off the table's front edge and raised the table so everything fits where you're already looking.
 - A preview-inspection package that our tooling auto-installed broke the TypeScript build; we removed it and switched to plain preview screenshots.
 
 ## Accomplishments that we're proud of
 - The moment the cubes drop onto the table: it makes 35 g feel like something.
-- Honest about uncertainty: no label means no guess.
+- Honest about uncertainty: no label means no guess, for live and saved results alike.
+- Live label reading in the preview with a fallback that keeps the demo moving.
 - Every build step is its own commit, checked in the preview.
 
 ## What we learned
@@ -38,15 +40,15 @@ Your hands stay on the product and your eyes stay on the shelf. A phone can show
 - Writing the design brief first made the AI-assisted build faster and more predictable.
 
 ## What's next for Honest Label
-- Connect the scan bridge to the Lens (live webcam scans with a 4 s cached fallback).
-- On SPECS hardware: Camera Module + Remote Service Gateway for on-device label reading.
-- Check the demo values against real labels and add more products.
+- On SPECS hardware: Camera Module + Remote Service Gateway for on-device label reading, replacing the preview bridge.
+- More decoded claims, and a per-serving vs per-pack toggle.
+- Pictures for live-scanned products, not just the three demo ones.
 
 ## Built with
 Lens Studio · SPECS · TypeScript · Spectacles Interaction Kit · Claude Code · CLAD · Python · Gemini API
 
 ## Pre-existing code and AI disclosure
-`tools/scan-bridge` is adapted from the webcam bridge in our earlier project GHOST; everything else was written during the hackathon. The Lens was planned with the `plan-lens` skill and built with Claude Code (Anthropic) and Snap's CLAD agents; the optional bridge uses Google Gemini to read labels. Details in the README.
+`tools/scan-bridge` is adapted from the webcam bridge in our earlier project GHOST; everything else was written during the hackathon. The Lens was planned with the `plan-lens` skill and built with Claude Code (Anthropic) and Snap's CLAD agents; the bridge uses Google Gemini to read labels. Details in the README.
 
 ## Links
 - Repo: https://github.com/xkristina/honest-label
