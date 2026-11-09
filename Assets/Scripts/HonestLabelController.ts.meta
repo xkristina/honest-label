@@ -28,7 +28,8 @@
   ExportUid: 00000000-0000-0000-0000-000000000000
   PackagePolicy: CanBeUnpacked
   ScriptInputsHidden:
-    {}
+    boxMesh: false
+    unlitMaterial: false
   ScriptTypesHidden:
     {}
   ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
@@ -38,10 +39,11 @@
   Attachments:
     []
   DefaultScriptInputs:
-    -
-      {}
+    - boxMesh: !<reference.RenderMesh> 00000000-0000-0000-0000-000000000000
+      unlitMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
   ScriptTypes:
     -
       {}
   InputLines:
-    []
+    - // @input Asset.RenderMesh boxMesh
+    - // @input Asset.Material unlitMaterial
