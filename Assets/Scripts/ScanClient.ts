@@ -1,6 +1,6 @@
 import { Claim, ScanResult } from "./ProductData"
 
-const TIMEOUT_S = 4
+const TIMEOUT_S = 6
 const WS_OPEN = 1
 
 /**
