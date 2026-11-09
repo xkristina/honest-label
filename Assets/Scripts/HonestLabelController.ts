@@ -1,6 +1,7 @@
 import { CachedScanner, ScanResult } from "./ProductData"
 import { COLORS, SceneKit } from "./SceneKit"
 import { SugarStack } from "./SugarStack"
+import { ResultCards } from "./ResultCards"
 
 /**
  * Honest Label main controller.
@@ -11,6 +12,8 @@ import { SugarStack } from "./SugarStack"
 const TABLE_POS = new vec3(0, -24, -100)
 /** Stack 1 base on the table (table-local). Stack 2 sits 30 cm to its right (Step E). */
 const STACK1_POS = new vec3(-18, 0, 0)
+/** Verdict card's left edge, relative to its stack. */
+const CARDS_OFFSET = new vec3(9, 0, 0)
 
 @component
 export class HonestLabelController extends BaseScriptComponent {
@@ -25,6 +28,7 @@ export class HonestLabelController extends BaseScriptComponent {
   private startCard: SceneObject
   private actionRow: SceneObject
   private stack1: SugarStack = null
+  private cards1: ResultCards = null
   private lastResult: ScanResult = null
 
   onAwake(): void {
@@ -78,7 +82,9 @@ export class HonestLabelController extends BaseScriptComponent {
 
   private showResult(r: ScanResult): void {
     if (this.stack1) this.stack1.destroy()
+    if (this.cards1) this.cards1.destroy()
     this.stack1 = new SugarStack(this.kit, this.table, "Stack1", STACK1_POS, r)
+    this.cards1 = new ResultCards(this.kit, this.table, "Cards1", STACK1_POS.add(CARDS_OFFSET), r)
     print(`[HonestLabel] Stack1 cubes: ${this.stack1.cubeCount === null ? "Not on label" : this.stack1.cubeCount}`)
   }
 }
