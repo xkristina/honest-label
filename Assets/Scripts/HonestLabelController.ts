@@ -195,10 +195,12 @@ export class HonestLabelController extends BaseScriptComponent {
     this.stack1.setPosition(COMPARE_LEFT)
     this.stack2 = new SugarStack(this.kit, this.table, "Stack2", COMPARE_RIGHT, r)
     this.compareGroup = this.kit.group(this.table, "CompareLabels", vec3.zero())
-    this.nameTag(this.stack1, COMPARE_LEFT)
-    this.nameTag(this.stack2, COMPARE_RIGHT)
-    this.compareImage(this.stack1, COMPARE_LEFT)
-    this.compareImage(this.stack2, COMPARE_RIGHT)
+    // Both sides share one baseline (the taller pile) so tags and pictures line up.
+    const top = Math.max(this.stack1.topY, this.stack2.topY, 2)
+    this.nameTag(this.stack1, COMPARE_LEFT, top)
+    this.nameTag(this.stack2, COMPARE_RIGHT, top)
+    this.compareImage(this.stack1, COMPARE_LEFT, top)
+    this.compareImage(this.stack2, COMPARE_RIGHT, top)
 
     const outcome = compareResults(this.stack1.result, r)
     this.outcomeText.text = outcome.message
@@ -209,24 +211,24 @@ export class HonestLabelController extends BaseScriptComponent {
       worse.setHighlight("dim")
       const pos = outcome.winner === 0 ? COMPARE_LEFT : COMPARE_RIGHT
       this.kit.text(this.compareGroup, "BetterPick", "Better pick", 2.2,
-        pos.add(new vec3(0, Math.max(better.topY, 2) + 12, 0)), COLORS.good)
+        pos.add(new vec3(0, top + 12, 0)), COLORS.good)
     }
     print(`[HonestLabel] Compare: ${outcome.message} (winner: ${outcome.winner === null ? "none" : outcome.winner + 1})`)
     this.setState("compared")
   }
 
   /** Product name + sugar under each pile in compare mode. */
-  private nameTag(stack: SugarStack, pos: vec3): void {
+  private nameTag(stack: SugarStack, pos: vec3, top: number): void {
     const r = stack.result
     const sugar = r.sugar_g === null ? `Sugar: ${NOT_ON_LABEL}` : `${r.sugar_g} g ${r.serving}`
     this.kit.text(this.compareGroup, "Name_" + stack.root.name, `${r.name}\n${sugar}`, 1.4,
-      pos.add(new vec3(0, Math.max(stack.topY, 2) + 8, 0)), COLORS.textDim, 26)
+      pos.add(new vec3(0, top + 8, 0)), COLORS.textDim, 26)
   }
 
   /** Product picture above the name tag and "Better pick" line in compare mode. */
-  private compareImage(stack: SugarStack, pos: vec3): void {
+  private compareImage(stack: SugarStack, pos: vec3, top: number): void {
     this.kit.imageCard(this.compareGroup, "Image_" + stack.root.name, this.textureFor(stack.result), IMAGE_CM,
-      pos.add(new vec3(0, Math.max(stack.topY, 2) + 14 + IMAGE_CM / 2, 0)))
+      pos.add(new vec3(0, top + 14 + IMAGE_CM / 2, 0)))
   }
 
   /** Picture for a result, matched by name; live scans of other products get none. */
