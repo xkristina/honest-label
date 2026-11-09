@@ -16,14 +16,65 @@ export const COLORS = {
   cube: new vec4(1, 1, 1, 1),
   good: new vec4(0.55, 1, 0.6, 1),
   dimCube: new vec4(0.45, 0.45, 0.45, 1),
+  cubeHalo: new vec4(0.35, 0.4, 0.45, 1),
+  goodHalo: new vec4(0.2, 0.6, 0.25, 1),
+  dimHalo: new vec4(0, 0, 0, 1),
 }
 
 export class SceneKit {
   private unitSize: vec3
 
-  constructor(private boxMesh: RenderMesh, private baseMaterial: Material) {
+  constructor(private boxMesh: RenderMesh, private baseMaterial: Material, private planeMesh: RenderMesh = null,
+              private imageMaterial: Material = null) {
     const size = boxMesh.aabbMax.sub(boxMesh.aabbMin)
     this.unitSize = new vec3(size.x || 1, size.y || 1, size.z || 1)
+  }
+
+  /**
+   * A floating picture (PNG with transparency) heightCm tall, centred on pos, facing +Z (the user).
+   * No backing panel. Returns null if there is no plane mesh or texture.
+   */
+  imageCard(parent: SceneObject, name: string, texture: Texture, heightCm: number, pos: vec3): SceneObject {
+    if (!this.planeMesh || !this.imageMaterial || !texture) return null
+    const o = this.group(parent, name, pos)
+    const rmv = o.createComponent("Component.RenderMeshVisual") as RenderMeshVisual
+    rmv.mesh = this.planeMesh
+    const mat = this.imageMaterial.clone()
+    mat.mainPass.baseColor = new vec4(1, 1, 1, 1)
+    mat.mainPass.baseTex = texture
+    mat.mainPass.blendMode = BlendMode.Normal
+    mat.mainPass.twoSided = true
+    mat.mainPass.depthWrite = false
+    rmv.clearMaterials()
+    rmv.addMaterial(mat)
+
+    // Fit the plane: find its flat axis, then scale the other two to the image aspect.
+    const ext = this.planeMesh.aabbMax.sub(this.planeMesh.aabbMin)
+    const aspect = texture.getHeight() > 0 ? texture.getWidth() / texture.getHeight() : 1
+    const widthCm = heightCm * aspect
+    const tr = o.getTransform()
+    if (ext.z <= 1e-4 || (ext.z < ext.x && ext.z < ext.y)) {
+      // Lies in XY, already faces Z.
+      tr.setLocalScale(new vec3(widthCm / (ext.x || 1), heightCm / (ext.y || 1), 1))
+    } else if (ext.y <= 1e-4 || (ext.y < ext.x && ext.y < ext.z)) {
+      // Lies in XZ: stand it up so it faces +Z.
+      tr.setLocalScale(new vec3(widthCm / (ext.x || 1), 1, heightCm / (ext.z || 1)))
+      tr.setLocalRotation(quat.angleAxis(Math.PI / 2, new vec3(1, 0, 0)))
+    } else {
+      // Lies in YZ: turn it to face +Z.
+      tr.setLocalScale(new vec3(1, heightCm / (ext.y || 1), widthCm / (ext.z || 1)))
+      tr.setLocalRotation(quat.angleAxis(-Math.PI / 2, new vec3(0, 1, 0)))
+    }
+    return o
+  }
+
+  /** A soft additive halo box around a cube (slightly larger, translucent). */
+  halo(parent: SceneObject, name: string, sizeCm: vec3, color: vec4): SceneObject {
+    const o = this.box(parent, name, sizeCm, vec3.zero(), color)
+    const rmv = o.getComponent("Component.RenderMeshVisual") as RenderMeshVisual
+    rmv.mainMaterial.mainPass.blendMode = BlendMode.Add
+    rmv.mainMaterial.mainPass.depthWrite = false
+    return o
   }
 
   group(parent: SceneObject, name: string, pos: vec3): SceneObject {

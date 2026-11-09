@@ -2008,6 +2008,11 @@
       devActions: ""
       internetModule: !<reference.InternetModule> 9907271a-8d1e-4c14-903f-f67c49fd469d
       bridgeUrl: "ws://127.0.0.1:8765"
+      planeMesh: !<reference.RenderMesh> 27c093d8-976a-410c-bada-c8a628402da7
+      imageMaterial: !<reference.Material> fb03be7a-d916-4825-a4ce-5fa24f4cf03e
+      colaTexture: !<reference.Texture> 725d6fb2-61fa-4f6e-acf0-38e265e23ee0
+      juiceTexture: !<reference.Texture> 6572523e-7ce3-444b-92d7-54708127930a
+      breadTexture: !<reference.Texture> 4d84a87e-5cd6-4f1a-8b65-10eb8a7de31d
   ScriptTypes:
     "":
       {}

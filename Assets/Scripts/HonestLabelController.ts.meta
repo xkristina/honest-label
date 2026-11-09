@@ -29,9 +29,14 @@
   PackagePolicy: CanBeUnpacked
   ScriptInputsHidden:
     boxMesh: false
+    breadTexture: false
     bridgeUrl: false
+    colaTexture: false
     devActions: false
+    imageMaterial: false
     internetModule: false
+    juiceTexture: false
+    planeMesh: false
     unlitMaterial: false
   ScriptTypesHidden:
     {}
@@ -47,6 +52,11 @@
       devActions: ""
       internetModule: !<reference.InternetModule> 00000000-0000-0000-0000-000000000000
       bridgeUrl: "ws://127.0.0.1:8765"
+      planeMesh: !<reference.RenderMesh> 00000000-0000-0000-0000-000000000000
+      imageMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
+      colaTexture: !<reference.Texture> 00000000-0000-0000-0000-000000000000
+      juiceTexture: !<reference.Texture> 00000000-0000-0000-0000-000000000000
+      breadTexture: !<reference.Texture> 00000000-0000-0000-0000-000000000000
   ScriptTypes:
     -
       {}
@@ -56,3 +66,8 @@
     - // @input string devActions
     - // @input Asset.InternetModule internetModule
     - '// @input string bridgeUrl = "ws://127.0.0.1:8765"'
+    - // @input Asset.RenderMesh planeMesh
+    - // @input Asset.Material imageMaterial
+    - // @input Asset.Texture colaTexture
+    - // @input Asset.Texture juiceTexture
+    - // @input Asset.Texture breadTexture
