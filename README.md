@@ -47,7 +47,7 @@ cp tools/scan-bridge/credentials.env.example tools/scan-bridge/credentials.env  
 bash tools/scan-bridge/run.sh
 ```
 
-The first run creates a Python virtual environment with `opencv-python` and `websockets` (about a minute). The window then shows `Scan bridge on ws://127.0.0.1:8765`. Press **S** to test a scan from the bridge window and **Q** to quit. Add `--image path\to\photo.png` to scan a saved picture instead of the webcam (the generic product pictures in `Assets/Images` work for this), or `--once` to scan once and exit. `python tools/scan-bridge/test_client.py` checks the bridge without Lens Studio.
+The first run creates a Python virtual environment with `opencv-python` and `websockets` (about a minute). The window then shows `Scan bridge on ws://127.0.0.1:8765`. Press **S** to test a scan from the bridge window and **Q** to quit. Add `--image path\to\photo.png` to scan a saved picture instead of the webcam, or `--once` to scan once and exit. `tools/scan-bridge/samples/cola-back.png` is a generic back-of-can with a nutrition panel: scanning it gives 35 g → 9 live cubes. The front-of-pack pictures in `Assets/Images` have no panel, so they give "Not on label", which is the honest answer. With a real product, show the nutrition panel to the webcam. `python tools/scan-bridge/test_client.py` checks the bridge without Lens Studio.
 
 Never commit `credentials.env`; it is gitignored, and the bridge reads the key from the environment only.
 
