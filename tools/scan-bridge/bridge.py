@@ -23,7 +23,7 @@ import websockets
 import gemini
 
 HOST, PORT = "127.0.0.1", 8765
-SCAN_TIMEOUT_S = float(os.environ.get("SCAN_TIMEOUT_S", "4"))
+SCAN_TIMEOUT_S = float(os.environ.get("SCAN_TIMEOUT_S", "8"))
 
 SYSTEM_PROMPT = (
     "You are Honest Label. Read ONLY what is printed on this product's packaging. "

@@ -1,13 +1,13 @@
 import { Claim, ScanResult } from "./ProductData"
 
-const TIMEOUT_S = 6
+const TIMEOUT_S = 10
 const WS_OPEN = 1
 
 /**
  * Asks the scan bridge for one scan over a WebSocket.
  * Sends {"type":"scan"} and resolves with the bridge's scan_result (source "live").
  * Falls back to the cached result on scan_error, no connection, a bad reply,
- * or no reply within 6 s (the bridge itself gives Gemini 4 s). Late replies are ignored.
+ * or no reply within 10 s (the bridge itself gives Gemini 8 s; measured ~4-6 s). Late replies are ignored.
  */
 export class ScanClient {
   private socket: WebSocket = null

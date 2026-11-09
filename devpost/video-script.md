@@ -19,6 +19,6 @@
 | — | 2:40 | End card: "Honest Label: the truth behind the label." Repo URL. | — | (silence) |
 
 ## Notes
-- **Live or saved?** For a clean recording, run the Lens without the bridge: every scan then uses the saved results instantly and the tag reads "saved", which shot 9's voiceover covers. To show live scans instead, start `tools\scan-bridge\run.ps1` with a Gemini key and Experimental API on, hold the real product to the webcam, and allow up to 6 s per scan; the tag then reads "live" and Gemini's own wording appears on the cards.
+- **Live or saved?** For a clean recording, run the Lens without the bridge: every scan then uses the saved results instantly and the tag reads "saved", which shot 9's voiceover covers. To show live scans instead, start `tools\scan-bridge\run.ps1` with a Gemini key and Experimental API on, hold the real product's nutrition panel to the webcam (the front of a pack gives "Not on label"), and allow 4–6 s per scan; the tag then reads "live" and Gemini's own wording appears on the cards.
 - Sugar numbers in shots 4 and 6 are the saved demo values (35 g = 9 cubes, 20 g = 5 cubes). Cube count is round(grams / 4).
 - Before recording, press Reset in the Preview so the saved order starts at the cola.

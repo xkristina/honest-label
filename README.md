@@ -28,7 +28,7 @@ Without the scan bridge running, every scan uses a saved result. The 3 demo prod
 
 ### Scan bridge (live scans in the preview)
 
-`tools/scan-bridge` is a small Python tool that grabs a webcam frame, asks Gemini what the product's label says, and answers the Lens over a local WebSocket (`ws://127.0.0.1:8765`) with a `scan_result` message (the format is in the design brief). The bridge gives Gemini 4 s; the Lens waits up to 6 s for the bridge, then falls back to a saved result.
+`tools/scan-bridge` is a small Python tool that grabs a webcam frame, asks Gemini what the product's label says, and answers the Lens over a local WebSocket (`ws://127.0.0.1:8765`) with a `scan_result` message (the format is in the design brief). The bridge gives Gemini 8 s (a scan usually takes 4–6 s); the Lens waits up to 10 s for the bridge, then falls back to a saved result.
 
 **One-time setup in Lens Studio:** the bridge uses a plain `ws://` address, which Lens Studio only allows with **Experimental API** turned on. Open **Project Settings**, find **Experimental API** under General, tick it, and press Reset in the Preview. Without it, the Lens logs "URL is not secure" and quietly uses saved results. (Snap won't publish a Lens with Experimental API on, which doesn't matter for the preview demo.)
 
@@ -61,7 +61,7 @@ The SPECS Camera Module returns no cameras in Lens Studio's preview, so the Lens
 Assets/Scripts/
   ProductData.ts            scan_result contract, cube maths, saved demo products, compare rule
   HonestLabelController.ts  states (start → result → waiting → compared), buttons, layout, pictures
-  ScanClient.ts             WebSocket client for the bridge, 6 s timeout, saved-result fallback
+  ScanClient.ts             WebSocket client for the bridge, 10 s timeout, saved-result fallback
   SugarStack.ts             real-size cube pile, drop + bounce animation, glow, highlight
   ResultCards.ts            verdict card and claim cards
   SceneKit.ts               runtime boxes, world-space text, picture cards, SIK pinch buttons
