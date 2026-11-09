@@ -1998,6 +1998,7 @@
   ScriptAsset: !<reference> dcfb58cd-a1bd-499b-ba1c-59fbc388c424
   ScriptInputsDefault:
     devActions: true
+    bridgeUrl: true
   ScriptTypesDefault:
     {}
   ScriptInputs:
@@ -2005,6 +2006,8 @@
       boxMesh: !<reference.RenderMesh> 4426334c-01ab-4d12-9bc5-1e5cc73cd21b
       unlitMaterial: !<reference.Material> 2c2d2a4f-414e-45c2-b174-5386c73f3362
       devActions: ""
+      internetModule: !<reference.InternetModule> 9907271a-8d1e-4c14-903f-f67c49fd469d
+      bridgeUrl: "ws://127.0.0.1:8765"
   ScriptTypes:
     "":
       {}

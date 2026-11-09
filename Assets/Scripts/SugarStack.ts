@@ -57,9 +57,10 @@ export class SugarStack {
     this.topY = layers * STEP_CM
     this.label = kit.text(this.root, "CountLabel", this.cubeCount === null ? NOT_ON_LABEL : "", 1.6,
       new vec3(0, Math.max(this.topY + 4.2, 3), 0), COLORS.text)
-    if (this.cubeCount !== null) {
-      kit.text(this.root, "RealSizeTag", "real size", 1.0, new vec3(0, this.topY + 2.2, 0), COLORS.textDim)
-    }
+    // Under the count label: "real size · live" / "real size · saved" ("live"/"saved" alone if no cubes).
+    const sourceTag = result.source === "live" ? "live" : "saved"
+    const tag = this.cubeCount !== null ? `real size · ${sourceTag}` : sourceTag
+    kit.text(this.root, "RealSizeTag", tag, 1.0, new vec3(0, this.topY + 2.2, 0), COLORS.textDim)
   }
 
   get isDone(): boolean {

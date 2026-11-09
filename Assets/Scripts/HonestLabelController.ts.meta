@@ -29,7 +29,9 @@
   PackagePolicy: CanBeUnpacked
   ScriptInputsHidden:
     boxMesh: false
+    bridgeUrl: false
     devActions: false
+    internetModule: false
     unlitMaterial: false
   ScriptTypesHidden:
     {}
@@ -43,6 +45,8 @@
     - boxMesh: !<reference.RenderMesh> 00000000-0000-0000-0000-000000000000
       unlitMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
       devActions: ""
+      internetModule: !<reference.InternetModule> 00000000-0000-0000-0000-000000000000
+      bridgeUrl: "ws://127.0.0.1:8765"
   ScriptTypes:
     -
       {}
@@ -50,3 +54,5 @@
     - // @input Asset.RenderMesh boxMesh
     - // @input Asset.Material unlitMaterial
     - // @input string devActions
+    - // @input Asset.InternetModule internetModule
+    - '// @input string bridgeUrl = "ws://127.0.0.1:8765"'

@@ -2,6 +2,7 @@ import { CachedScanner, compareResults, NOT_ON_LABEL, ScanResult } from "./Produ
 import { COLORS, SceneKit } from "./SceneKit"
 import { SugarStack } from "./SugarStack"
 import { ResultCards } from "./ResultCards"
+import { ScanClient } from "./ScanClient"
 
 /**
  * Honest Label main controller.
@@ -31,6 +32,9 @@ export class HonestLabelController extends BaseScriptComponent {
   @input unlitMaterial: Material
   /** Dev only: comma-separated actions run at start for screenshots, e.g. "scan,compare,scan". Keep empty. */
   @input devActions: string = ""
+  /** Scan bridge (tools/scan-bridge). Without it, scans use saved results. */
+  @input @allowUndefined internetModule: InternetModule
+  @input bridgeUrl: string = "ws://127.0.0.1:8765"
 
   state: HLState = "start"
   stack1: SugarStack = null
@@ -39,6 +43,7 @@ export class HonestLabelController extends BaseScriptComponent {
 
   private kit: SceneKit
   private scanner = new CachedScanner()
+  private client: ScanClient
   private table: SceneObject
   private startCard: SceneObject
   private hint: Text
@@ -59,6 +64,7 @@ export class HonestLabelController extends BaseScriptComponent {
       return
     }
     this.kit = new SceneKit(this.boxMesh, this.unlitMaterial)
+    this.client = new ScanClient(this, this.internetModule, this.bridgeUrl, () => this.scanner.next())
     this.table = this.kit.group(this.sceneObject, "Table", TABLE_POS)
     this.kit.box(this.table, "TableTop", new vec3(90, 1, 45), new vec3(0, -0.5, 0), COLORS.table)
     this.buildStartCard()
@@ -112,8 +118,18 @@ export class HonestLabelController extends BaseScriptComponent {
     print(`[HonestLabel] State: ${s}`)
   }
 
+  /** Pinch Scan: ask the bridge (live), falling back to saved results. */
   onScan(): void {
-    const r = this.scanner.next()
+    if (this.client.busy) return
+    const scanFor = this.state
+    this.hint.text = "Scanning…"
+    this.client.request((r) => {
+      if (this.state !== scanFor) return // Reset pressed while scanning
+      this.applyScan(r)
+    })
+  }
+
+  private applyScan(r: ScanResult): void {
     print(`[HonestLabel] Scan -> ${r.name} (source: ${r.source})`)
     if (this.state === "waiting") this.showCompare(r)
     else this.showFirst(r)
@@ -128,6 +144,7 @@ export class HonestLabelController extends BaseScriptComponent {
   }
 
   onReset(): void {
+    this.client.cancel()
     this.clearCompare()
     if (this.stack1) this.stack1.destroy()
     if (this.cards1) this.cards1.destroy()
@@ -197,7 +214,8 @@ export class HonestLabelController extends BaseScriptComponent {
   private runDevActions(): void {
     const actions = (this.devActions || "").split(",").map((a) => a.trim()).filter((a) => a.length > 0)
     for (const a of actions) {
-      if (a === "scan") this.onScan()
+      if (a === "scan") this.applyScan(this.scanner.next()) // dev hook stays synchronous, saved results only
+      else if (a === "livescan") this.onScan() // async: goes through the bridge client
       else if (a === "compare") this.onCompare()
       else if (a === "reset") this.onReset()
     }
